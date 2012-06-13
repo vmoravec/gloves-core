@@ -20,7 +20,7 @@ gloves_modules.each do |glove|
   long_desc glove.description
 
   glove.executables.each do |bin_file|
-    command bin_file do |c|
+    command bin_file.split('-').last do |c|
       c.action do
         load "#{glove.bin_dir}/#{bin_file}"
       end
