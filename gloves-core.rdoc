@@ -1,0 +1,5 @@
+= gloves-core
+
+Generate this with
+    gloves-core rdoc
+After you have described your command line interface

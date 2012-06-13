@@ -1,0 +1,52 @@
+#!/usr/bin/env ruby
+
+require 'gli'
+require 'gloves-core'
+
+include GLI::App
+
+GLOVES_SPEC = Gem::Specification.find_by_name 'gloves-core'
+GLOVES_MODULE_PREFIX = /(gloves-(?!core).\S+)/
+
+program_desc GLOVES_SPEC.description
+
+version Gloves::Core::VERSION
+
+gloves_modules = Gem::Specification.select {|gem| gem.name =~ GLOVES_MODULE_PREFIX }
+
+gloves_modules.each do |glove|
+
+  desc glove.summary
+  long_desc glove.description
+
+  glove.executables.each do |bin_file|
+    command bin_file do |c|
+      c.action do
+        load "#{glove.bin_dir}/#{bin_file}"
+      end
+    end
+  end
+end
+
+pre do |global,command,options,args|
+  # Pre logic here
+  # Return true to proceed; false to abourt and not call the
+  # chosen command
+  # Use skips_pre before a command to skip this block
+  # on that command only
+  true
+end
+
+post do |global,command,options,args|
+  # Post logic here
+  # Use skips_post before a command to skip this
+  # block on that command only
+end
+
+on_error do |exception|
+  # Error logic here
+  # return false to skip default error handling
+  true
+end
+
+exit run(ARGV)
