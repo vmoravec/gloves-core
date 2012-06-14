@@ -13,8 +13,12 @@ program_desc GLOVES_SPEC.description
 version Gloves::Core::VERSION
 
 current_gloves_modules = Gem::Specification.select {|gem| gem.name =~ GLOVES_MODULE_PREFIX }
+current_gloves_modules.each &:activate
 
-commands_from 'gloves/commands'
+desc 'List currently available gloves'
+command :current do |current|
+  current.commands_from 'gloves/commands'
+end
 
 exit run(ARGV)
 __END__
