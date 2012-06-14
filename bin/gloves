@@ -14,7 +14,7 @@ version Gloves::Core::VERSION
 
 current_gloves_modules = Gem::Specification.select {|gem| gem.name =~ GLOVES_MODULE_PREFIX }
 
-commands_form 'gloves/commands'
+commands_from 'gloves/commands'
 
 exit run(ARGV)
 __END__
