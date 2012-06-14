@@ -12,7 +12,7 @@ spec = Gem::Specification.new do |s|
   s.files         = `git ls-files`.split($\)
   s.require_paths = ['lib']
   s.bindir = 'bin'
-  s.executables << 'gloves'
+  s.executables = ['gloves']
 
   s.add_runtime_dependency('gli','2.0.0.rc4')
 

@@ -14,6 +14,25 @@ version Gloves::Core::VERSION
 
 current_gloves_modules = Gem::Specification.select {|gem| gem.name =~ GLOVES_MODULE_PREFIX }
 
+commands_form 'gloves/commands'
+
+exit run(ARGV)
+__END__
+commands_form 'gloves/commands'
+# current_gloves_modules.each do |glove|
+#   glove_commands = gt
+#   glove.executables.each do |bin_file|
+#     desc glove.summary
+#     long_desc glove.description
+#     command_name = bin_file.split('-').last
+#     command command_name do |c|
+#       c.action do
+#         load "#{glove.bin_dir}/#{bin_file}"
+#       end
+#     end
+#   end
+# end
+
 all_gloves_modules = {
   'timezone' => 'Timezone configuration - [gloves-timezone]',
   'language' => 'Language configuration - [gloves-language]',
@@ -23,21 +42,9 @@ all_gloves_modules = {
   'sound'    => 'Sound configuration    - [gloves-sound]'
 }
 
-current_gloves_modules.each do |glove|
-  desc glove.summary
-  long_desc glove.description
-  glove.executables.each do |bin_file|
-    command_name = bin_file.split('-').last
-    command command_name do |c|
-      c.action do
-        load "#{glove.bin_dir}/#{bin_file}"
-      end
-    end
-  end
-end
-
 desc 'List currently available gloves'
 command :current do |current|
+  current.commands_from 'gloves/commands'
   current.action do |global,options,args|
     puts "   Currently available gloves are:\n"
     puts "   None" and return if current_gloves_modules.size == 0
@@ -99,4 +106,3 @@ all_gloves_modules = {
   'sound'    => 'Sound configuration    - [gloves-sound]'
 }
 
-exit run(ARGV)
