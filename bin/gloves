@@ -20,8 +20,8 @@ all_gloves_modules = {
   'language' => 'Language configuration - [gloves-language]',
   'keyboard' => 'Keyboard configuration - [gloves-keyboard]',
   'firewall' => 'Firewall configuraiton - [gloves-firewall]',
-  'ftp     ' => 'FTP configuration      - [gloves-ftp]',
-  'sound   ' => 'Sound configuration    - [gloves-sound]'
+  'ftp'      => 'FTP configuration      - [gloves-ftp]',
+  'sound'    => 'Sound configuration    - [gloves-sound]'
 }
 
 current_gloves_modules.each do |glove|
