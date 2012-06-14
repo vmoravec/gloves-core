@@ -1,1 +1,5 @@
-Gloves::Core::VERSION = '0.0.1'
+module Gloves
+  module Core
+    VERSION = '0.0.1'
+  end
+end

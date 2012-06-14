@@ -53,19 +53,19 @@ end
 
 desc 'List all available gloves'
 command :all do |all|
-  all.default_command :current
   all.action do |global,options,args|
     puts "All available gloves:\n"
     current_gloves_modules.each do |glove|
       glove.executables.each do |bin_file|
-        puts ' '*3 + bin_file.split('-').last +
+        glove_name = bin_file.split('-').last
+        puts ' '*3 + glove_name +
              ' - ' + 'Country configuration'  +
              '  - ' +  "[#{bin_file}]" + '  -  installed'
-      all_gloves_modules.delete bin_file
+      all_gloves_modules.delete glove_name
       end
     end
     all_gloves_modules.each_pair do |name,description|
-      puts "   #{name}  -  #{description} "
+      puts "   #{name} - #{description} "
     end
   end
 end

@@ -9,9 +9,8 @@ spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.summary = 'Tools for system configuration'
   s.description = 'Set of tools for system configuration'
-# Add your other files here if you make them
   s.files         = `git ls-files`.split($\)
-  s.require_paths << 'lib'
+  s.require_paths = ['lib']
   s.has_rdoc = true
   s.extra_rdoc_files = ['README.rdoc','gloves-core.rdoc']
   s.rdoc_options << '--title' << 'gloves-core' << '--main' << 'README.rdoc' << '-ri'
