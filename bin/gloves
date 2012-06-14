@@ -39,7 +39,6 @@ end
 
 desc 'List currently available gloves'
 command :current do |current|
-  current.default_command :help
   current.action do |global,options,args|
     puts "   Currently available gloves are:\n"
     puts "   None" and return if current_gloves_modules.size == 0
