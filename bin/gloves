@@ -13,13 +13,23 @@ program_desc GLOVES_SPEC.description
 
 version Gloves::Core::VERSION
 
-gloves_modules = Gem::Specification.select {|gem| gem.name =~ GLOVES_MODULE_PREFIX }
+current_gloves_modules = Gem::Specification.select {|gem| gem.name =~ GLOVES_MODULE_PREFIX }
 
-gloves_modules.each do |glove|
+all_gloves_modules = {
+  'timezone' => 'Timezone configuration - [gloves-timezone]',
+  'language' => 'Language configuration - [gloves-language]',
+  'keyboard' => 'Keyboard configuration - [gloves-keyboard]',
+  'firewall' => 'Firewall configuraiton - [gloves-firewall]',
+  'ftp     ' => 'FTP configuration      - [gloves-ftp]',
+  'sound   ' => 'Sound configuration    - [gloves-sound]'
+}
+
+current_gloves_modules.each do |glove|
   desc glove.summary
   long_desc glove.description
   glove.executables.each do |bin_file|
-    command bin_file.split('-').last do |c|
+    command_name = bin_file.split('-').last
+    command command_name do |c|
       c.action do
         load "#{glove.bin_dir}/#{bin_file}"
       end
@@ -31,9 +41,9 @@ desc 'List currently available gloves'
 command :current do |current|
   current.default_command :help
   current.action do |global,options,args|
-    puts "Currently available gloves are:\n"
-    puts "   None" and return if gloves_modules.size == 0
-    gloves_modules.each do |glove|
+    puts "   Currently available gloves are:\n"
+    print "   None" and return if current_gloves_modules.size == 0
+    current_gloves_modules.each do |glove|
       long_desc glove.description
       glove.executables.each do |bin_file|
         puts ' '*3 + bin_file.split('-').last + ' - ' + glove.summary
@@ -47,19 +57,17 @@ command :all do |all|
   all.default_command :current
   all.action do |global,options,args|
     puts "All available gloves:\n"
-    gloves_modules.each do |glove|
+    current_gloves_modules.each do |glove|
       glove.executables.each do |bin_file|
         puts ' '*3 + bin_file.split('-').last +
              ' - ' + 'Country configuration'  +
              '  - ' +  "[#{bin_file}]" + '  -  installed'
+      all_gloves_modules.delete bin_file
       end
     end
-    puts "   timezone - Timezone configuration - [gloves-timezone]"
-    puts "   language - Language configuration - [gloves-langauge]"
-    puts "   keyboard - Keyboard configuration - [gloves-keyboard]"
-    puts "   firewall - Firewall configuration - [gloves-firewall]"
-    puts "   ftp      - FTP configuration      - [gloves-ftp]"
-    puts "   sound    - Sound configuration    - [gloves-sound]"
+    all_gloves_modules.each_pair do |name,description|
+      puts "   #{name}  -  #{description} "
+    end
   end
 end
 
@@ -83,5 +91,14 @@ on_error do |exception|
   # return false to skip default error handling
   true
 end
+
+all_gloves_modules = {
+  'timezone' => 'Timezone configuration - [gloves-timezone]',
+  'language' => 'Language configuration - [gloves-language]',
+  'keyboard' => 'Keyboard configuration - [gloves-keyboard]',
+  'firewall' => 'Firewall configuraiton - [gloves-firewall]',
+  'ftp'      => 'FTP configuration      - [gloves-ftp]',
+  'sound'    => 'Sound configuration    - [gloves-sound]'
+}
 
 exit run(ARGV)
