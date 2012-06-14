@@ -11,9 +11,6 @@ spec = Gem::Specification.new do |s|
   s.description = 'Set of tools for system configuration'
   s.files         = `git ls-files`.split($\)
   s.require_paths = ['lib']
-  s.has_rdoc = true
-  s.extra_rdoc_files = ['README.rdoc','gloves-core.rdoc']
-  s.rdoc_options << '--title' << 'gloves-core' << '--main' << 'README.rdoc' << '-ri'
   s.bindir = 'bin'
   s.executables << 'gloves'
 
