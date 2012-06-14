@@ -1,12 +1,11 @@
 #!/usr/bin/env ruby
 
-GLOVES_CORE = 'gloves-core'
 require 'gli'
-require GLOVES_CORE
+require 'gloves/core'
 
 include GLI::App
 
-GLOVES_SPEC = Gem::Specification.find_by_name GLOVES_CORE
+GLOVES_SPEC = Gem::Specification.find_by_name 'gloves-core'
 GLOVES_MODULE_PREFIX = /(gloves-(?!core).\S+)/
 
 program_desc GLOVES_SPEC.description
