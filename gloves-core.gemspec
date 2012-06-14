@@ -1,5 +1,5 @@
 # Ensure we require the local version and not one we might have installed already
-require File.join([File.dirname(__FILE__),'lib','gloves-core','version.rb'])
+require File.join([File.dirname(__FILE__),'lib','gloves','core', 'version.rb'])
 spec = Gem::Specification.new do |s| 
   s.name = 'gloves-core'
   s.version = Gloves::Core::VERSION
@@ -10,11 +10,7 @@ spec = Gem::Specification.new do |s|
   s.summary = 'Tools for system configuration'
   s.description = 'Set of tools for system configuration'
 # Add your other files here if you make them
-  s.files = %w(
-bin/gloves
-lib/gloves-core/version.rb
-lib/gloves-core.rb
-  )
+  s.files         = `git ls-files`.split($\)
   s.require_paths << 'lib'
   s.has_rdoc = true
   s.extra_rdoc_files = ['README.rdoc','gloves-core.rdoc']

@@ -42,7 +42,7 @@ command :current do |current|
   current.default_command :help
   current.action do |global,options,args|
     puts "   Currently available gloves are:\n"
-    print "   None" and return if current_gloves_modules.size == 0
+    puts "   None" and return if current_gloves_modules.size == 0
     current_gloves_modules.each do |glove|
       long_desc glove.description
       glove.executables.each do |bin_file|
