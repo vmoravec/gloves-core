@@ -18,6 +18,7 @@ current_gloves_modules.each &:activate
 desc 'List currently available gloves'
 command :current do |current|
   current.commands_from 'gloves/commands'
+  current.action {}
 end
 
 exit run(ARGV)
