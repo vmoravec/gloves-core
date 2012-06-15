@@ -1,27 +1,10 @@
 #!/usr/bin/env ruby
 
-require 'gli'
-require 'gloves/core'
+require 'gloves/cli'
 
-include GLI::App
+Gloves::Cli.start
 
-GLOVES_SPEC = Gem::Specification.find_by_name 'gloves-core'
-GLOVES_MODULE_PREFIX = /(gloves-(?!core).\S+)/
 
-program_desc GLOVES_SPEC.description
-
-version Gloves::Core::VERSION
-
-current_gloves_modules = Gem::Specification.select {|gem| gem.name =~ GLOVES_MODULE_PREFIX }
-current_gloves_modules.each &:activate
-
-desc 'List currently available gloves'
-command :current do |current|
-  current.commands_from 'gloves/commands'
-  current.action {}
-end
-
-exit run(ARGV)
 __END__
 commands_form 'gloves/commands'
 # current_gloves_modules.each do |glove|
