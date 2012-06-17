@@ -14,15 +14,6 @@ version Gloves::Core::VERSION
 
 current_gloves_modules = Gem::Specification.select {|gem| gem.name =~ GLOVES_MODULE_PREFIX }
 
-all_gloves_modules = {
-  'timezone' => 'Timezone configuration - [gloves-timezone]',
-  'language' => 'Language configuration - [gloves-language]',
-  'keyboard' => 'Keyboard configuration - [gloves-keyboard]',
-  'firewall' => 'Firewall configuraiton - [gloves-firewall]',
-  'ftp'      => 'FTP configuration      - [gloves-ftp]',
-  'sound'    => 'Sound configuration    - [gloves-sound]'
-}
-
 current_gloves_modules.each do |glove|
   desc glove.summary
   long_desc glove.description
@@ -49,6 +40,15 @@ command :current do |current|
     end
   end
 end
+
+all_gloves_modules = {
+  'timezone' => 'Timezone configuration - [gloves-timezone]',
+  'language' => 'Language configuration - [gloves-language]',
+  'keyboard' => 'Keyboard configuration - [gloves-keyboard]',
+  'firewall' => 'Firewall configuraiton - [gloves-firewall]',
+  'ftp'      => 'FTP configuration      - [gloves-ftp]',
+  'sound'    => 'Sound configuration    - [gloves-sound]'
+}
 
 desc 'List all available gloves'
 command :all do |all|
