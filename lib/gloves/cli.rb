@@ -18,16 +18,17 @@ module Gloves
       attr_reader :commands
 
       def start cli_argv
-        @spec    = Gem::Specification.find_by_name GLOVES_LIB_NAME
         @commands = {}
+        @modules  = {}
+        @spec     = Gem::Specification.find_by_name GLOVES_LIB_NAME
         load_modules
         load_commands
         load_gli cli_argv
       end
 
       def command options={}
-        raise ArgumentError, "Expecting both name and description" \
-          unless options[:name] or options[:description]
+        raise ArgumentError, "Expecting both command name and description" \
+          unless options[:name] && options[:description]
         @commands[options[:name]] = {:description => options[:description] }
       end
 
@@ -37,7 +38,6 @@ module Gloves
       # In case multiple versions of modules are installed
       # only the latest version will be used
       def load_modules
-        @modules = {}
         all_modules = Gem::Specification.select {|gem| gem.name =~ GLOVES_MODULES_MATCH }
         all_modules.group_by(:name).map do |name, modules_specs|
           @modules[name] = modules_specs.sort.last
@@ -46,12 +46,12 @@ module Gloves
 
       # Used for searching installed modules' commands using Gem::Specification#lib_dirs_glob
       def load_commands
-        @commands = {}
         modules.values.each do |module_spec|
           module_spec.lib_dirs_glob.each do |module_lib_dir|
             commands_path = File.join module_lib_dir, GLOVES_COMMANDS_PATH
             Dir.entries(commands_path).grep(/\w+/).each do |command_file|
-              @commands[File.basename command_file, '.rb'] = commands_path + command_file
+              # @commands[File.basename command_file, '.rb'] = commands_path + command_file
+              require commands_path + command_file
             end
           end
         end
@@ -84,7 +84,7 @@ module Gloves
     end # class << self
 
     module App
-      def gli
+      def self.gli
         yield GLI::App if block_given?
       end
 
