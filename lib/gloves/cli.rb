@@ -26,10 +26,15 @@ module Gloves
         load_gli cli_argv
       end
 
-      def command options={}
+      def command options={}, &block
+        command_name = options.delete :name
+        command_desc = options[:description]
         raise ArgumentError, "Expecting both command name and description" \
-          unless options[:name] && options[:description]
-        @commands[options[:name]] = {:description => options[:description] }
+          unless command_name && command_desc
+        raise RuntimeError, "Duplicate definition of command #{command_name} in #{caller[0]}" +
+          "There already exists a command '#{command_name}' in #{@commands[command_name][:block].source_location}" \
+          if @commands[command_name]
+        @commands[command_name] = options.update :block=>block
       end
 
       private
@@ -60,15 +65,11 @@ module Gloves
 
       def start_gli_app argv
         App.gli do
+          #TODO create separate file with top command specs
           program_desc spec.description
           version Gloves::Core::VERSION
           commands.each_pair do |command_name,properties|
-            command command_name do |c|
-              c.action do |global,options,args|
-                require "#{properties[:command_path]}"
-              end
-              c.description 'Loaded description from the file'
-            end
+            command command_name &properties[:block]
           end
           quit_gli_app run(ARGV)
         end
