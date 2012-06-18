@@ -1,40 +1,64 @@
+require 'gli'
+
 module Gloves
   module Cli
     class << self
-
+      # Need gem name for querying the gemspec
+      # to get info for the top command `gloves help`
       GLOVES_LIB_NAME = 'gloves-core'
+
+      # use regexp for searching installed modules through Gem::Specification
+      GLOVES_MODULES_MATCH = /^(gloves-(?!core).\S+)/
+
+      # For command searching in paths of installed modules
       GLOVES_COMMANDS_PATH = 'gloves/cli/commands'
-      GLOVES_MODULES_MATCH = /(gloves-(?!core).\S+)/
 
       attr_reader :spec
       attr_reader :modules
       attr_reader :commands
 
-      def start
+      def start cli_argv
         @spec    = Gem::Specification.find_by_name GLOVES_LIB_NAME
-        @modules = Gem::Specification.select {|gem| gem.name =~ GLOVES_MODULES_MATCH }
+        @commands = {}
+        load_modules
         load_commands
-        start_gli_app
+        load_gli cli_argv
       end
 
-      def command name
-
+      def command options={}
+        raise ArgumentError, "Expecting both name and description" \
+          unless options[:name] or options[:description]
+        @commands[options[:name]] = {:description => options[:description] }
       end
 
       private
 
+      # Loads all installed Gloves modules
+      # In case multiple versions of modules are installed
+      # only the latest version will be used
+      def load_modules
+        @modules = {}
+        all_modules = Gem::Specification.select {|gem| gem.name =~ GLOVES_MODULES_MATCH }
+        all_modules.group_by(:name).map do |name, modules_specs|
+          @modules[name] = modules_specs.sort.last
+        end
+      end
+
+      # Used for searching installed modules' commands using Gem::Specification#lib_dirs_glob
       def load_commands
         @commands = {}
-        modules.map.lib_dirs_glob.each do |module_lib_dir|
-          commands_path = File.join module_lib_dir, GLOVES_COMMANDS_PATH
-          module_commands = Dir.entries(commands_path).grep /\w+/
-          module_commands.each do |command|
-            @commands[command] = { :command_path => commands_path }
+        modules.values.each do |module_spec|
+          module_spec.lib_dirs_glob.each do |module_lib_dir|
+            commands_path = File.join module_lib_dir, GLOVES_COMMANDS_PATH
+            Dir.entries(commands_path).grep(/\w+/).each do |command_file|
+              @commands[File.basename command_file, '.rb'] = commands_path + command_file
+            end
           end
         end
       end
 
-      def start_gli_app
+
+      def start_gli_app argv
         App.gli do
           program_desc spec.description
           version Gloves::Core::VERSION

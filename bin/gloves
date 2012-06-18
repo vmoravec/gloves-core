@@ -2,7 +2,7 @@
 
 require 'gloves/cli'
 
-Gloves::Cli.start
+Gloves::Cli.start ARGV
 
 
 __END__
