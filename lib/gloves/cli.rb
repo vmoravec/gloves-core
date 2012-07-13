@@ -1,14 +1,13 @@
+require 'gloves/core'
 require 'gli'
 
 module Gloves
+  LIB_NAME = 'gloves'
+
   module Cli
     class << self
-      # Need gem name for querying the gemspec
-      # to get info for the top command `gloves help`
-      GLOVES_LIB_NAME = 'gloves-core'
-
       # use regexp for searching installed modules through Gem::Specification
-      GLOVES_MODULES_MATCH = /^(gloves-(?!core).\S+)/
+      GLOVES_MODULES_MATCH = /^(#{Gloves::LIB_NAME}-(?!#{Gloves::Core::MODULE_NAME}).\S+)/
 
       # For command searching in paths of installed modules
       GLOVES_COMMANDS_PATH = 'gloves/cli/commands'
@@ -17,13 +16,13 @@ module Gloves
       attr_reader :modules
       attr_reader :commands
 
-      def start cli_argv
+      def start argv
         @commands = {}
         @modules  = {}
         @spec     = Gem::Specification.find_by_name GLOVES_LIB_NAME
         load_modules
         load_commands
-        load_gli cli_argv
+        load_gli argv
       end
 
       def command options={}, &block
