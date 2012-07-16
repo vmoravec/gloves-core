@@ -29,6 +29,19 @@ all_gloves_modules = {
   'ftp'      => 'FTP configuration      - [gloves-ftp]',
   'sound'    => 'Sound configuration    - [gloves-sound]'
 }
+=======
+current_gloves_modules.each do |glove|
+  desc glove.summary
+  long_desc glove.description
+  glove.executables.each do |bin_file|
+    command_name = bin_file.split('-').last
+    command command_name do |c|
+      c.action do
+        load "#{glove.bin_dir}/#{bin_file}"
+      end
+    end
+  end
+end
 
 desc 'List currently available gloves'
 command :current do |current|
@@ -44,6 +57,15 @@ command :current do |current|
     end
   end
 end
+
+all_gloves_modules = {
+  'timezone' => 'Timezone configuration - [gloves-timezone]',
+  'language' => 'Language configuration - [gloves-language]',
+  'keyboard' => 'Keyboard configuration - [gloves-keyboard]',
+  'firewall' => 'Firewall configuraiton - [gloves-firewall]',
+  'ftp'      => 'FTP configuration      - [gloves-ftp]',
+  'sound'    => 'Sound configuration    - [gloves-sound]'
+}
 
 desc 'List all available gloves'
 command :all do |all|
